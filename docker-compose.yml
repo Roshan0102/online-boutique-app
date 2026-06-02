@@ -1,0 +1,143 @@
+version: '3.8'
+
+services:
+  # ==========================================================
+  # Database Service (PostgreSQL)
+  # ==========================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: cloudcart-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-cloudcart_main}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    networks:
+      - cloudcart-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-cloudcart_main}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  # ==========================================================
+  # User Microservice
+  # ==========================================================
+  user-service:
+    build:
+      context: ./services/user-service
+      dockerfile: Dockerfile
+    container_name: cloudcart-user-service
+    restart: always
+    ports:
+      - "5001:5001"
+    environment:
+      PORT: 5001
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DB_NAME: cloudcart_users
+      JWT_SECRET: ${JWT_SECRET:-cloudcart_jwt_secret_key_2026}
+    networks:
+      - cloudcart-net
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ==========================================================
+  # Product Microservice
+  # ==========================================================
+  product-service:
+    build:
+      context: ./services/product-service
+      dockerfile: Dockerfile
+    container_name: cloudcart-product-service
+    restart: always
+    ports:
+      - "5002:5002"
+    environment:
+      PORT: 5002
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DB_NAME: cloudcart_products
+    networks:
+      - cloudcart-net
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ==========================================================
+  # Order Microservice
+  # ==========================================================
+  order-service:
+    build:
+      context: ./services/order-service
+      dockerfile: Dockerfile
+    container_name: cloudcart-order-service
+    restart: always
+    ports:
+      - "5003:5003"
+    environment:
+      PORT: 5003
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DB_NAME: cloudcart_orders
+      JWT_SECRET: ${JWT_SECRET:-cloudcart_jwt_secret_key_2026}
+      # Internal Docker container-to-container URL for resolving products
+      PRODUCT_SERVICE_URL: http://product-service:5002
+    networks:
+      - cloudcart-net
+    depends_on:
+      postgres:
+        condition: service_healthy
+      product-service:
+        condition: service_healthy
+
+  # ==========================================================
+  # Frontend Application
+  # ==========================================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Build-time environment variables for the compiled bundle
+        # Note: Frontend running in the client browser must make API calls to localhost, not internal docker hostnames.
+        VITE_USER_SERVICE_URL: http://localhost:5001
+        VITE_PRODUCT_SERVICE_URL: http://localhost:5002
+        VITE_ORDER_SERVICE_URL: http://localhost:5003
+    container_name: cloudcart-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - cloudcart-net
+    depends_on:
+      user-service:
+        condition: service_healthy
+      product-service:
+        condition: service_healthy
+      order-service:
+        condition: service_healthy
+
+# ==========================================================
+# Shared Network & Volumes Configuration
+# ==========================================================
+networks:
+  cloudcart-net:
+    driver: bridge
+
+volumes:
+  postgres-data:
+    driver: local
