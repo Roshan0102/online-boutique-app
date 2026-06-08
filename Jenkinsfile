@@ -351,6 +351,76 @@ stage('Push Order Service') {
 }
 }
 
+stage('Update GitOps Repo') {
+
+    steps {
+
+        script {
+
+            dir('gitops') {
+                deleteDir()
+            }
+
+            withCredentials([usernamePassword(
+                credentialsId: 'github-creds',
+                usernameVariable: 'GITHUB_USER',
+                passwordVariable: 'GITHUB_TOKEN'
+            )]) {
+
+                sh """
+                git clone https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/Roshan0102/online-boutique-gitops.git gitops
+                """
+
+                dir('gitops') {
+
+                    sh """
+                    git config user.name "Jenkins"
+                    git config user.email "jenkins@cloudcart.local"
+                    """
+
+                    if (env.BUILD_FRONTEND == "true") {
+
+                        sh """
+                        sed -i 's|image: roshan033/cloudcart-frontend:.*|image: roshan033/cloudcart-frontend:${IMAGE_TAG}|' \
+                        apps/cloudcart/frontend/frontend-deployment.yaml
+                        """
+                    }
+
+                    if (env.BUILD_USER == "true") {
+
+                        sh """
+                        sed -i 's|image: roshan033/cloudcart-user-service:.*|image: roshan033/cloudcart-user-service:${IMAGE_TAG}|' \
+                        apps/cloudcart/user-service/user-service-deployment.yaml
+                        """
+                    }
+
+                    if (env.BUILD_PRODUCT == "true") {
+
+                        sh """
+                        sed -i 's|image: roshan033/cloudcart-product-service:.*|image: roshan033/cloudcart-product-service:${IMAGE_TAG}|' \
+                        apps/cloudcart/product-service/product-service-deployment.yaml
+                        """
+                    }
+
+                    if (env.BUILD_ORDER == "true") {
+
+                        sh """
+                        sed -i 's|image: roshan033/cloudcart-order-service:.*|image: roshan033/cloudcart-order-service:${IMAGE_TAG}|' \
+                        apps/cloudcart/order-service/order-service-deployment.yaml
+                        """
+                    }
+
+                    sh """
+                    git add .
+                    git commit -m "Update images to ${IMAGE_TAG}" || true
+                    git push origin main
+                    """
+                }
+            }
+        }
+    }
+}
+
 post {
     always {
         archiveArtifacts artifacts: 'trivy-reports/*', fingerprint: true
