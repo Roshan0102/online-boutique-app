@@ -25,7 +25,7 @@ const OrderHistory = () => {
         setOrders(response.data);
       } catch (err) {
         console.error('Fetch orders error:', err);
-        setError('Failed to fetch orders history. Orders Service might be offline.');
+        setError('Failed to fetch orders history. Orders Services might be offline.');
       } finally {
         setLoading(false);
       }

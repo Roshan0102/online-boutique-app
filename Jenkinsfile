@@ -360,10 +360,9 @@ stage('Update GitOps Repo') {
                 deleteDir()
             }
 
-            withCredentials([usernamePassword(
+            withCredentials([string(
                 credentialsId: 'github-token',
-                usernameVariable: 'GITHUB_USER',
-                passwordVariable: 'GITHUB_TOKEN'
+                variable: 'GITHUB_TOKEN'
             )]) {
 
                 sh """
