@@ -240,9 +240,8 @@ stages {
             }
         }
     }
-}
 
-stage('Push Frontend') {
+    stage('Push Frontend') {
 
     when {
         expression { env.BUILD_FRONTEND == "true" }
@@ -349,6 +348,7 @@ stage('Push Order Service') {
             """
         }
     }
+}
 }
 
 post {
