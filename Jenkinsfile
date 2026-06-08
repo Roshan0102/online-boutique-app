@@ -188,6 +188,63 @@ stages {
     }
 }
 
+    stage('Trivy Scan') {
+
+        steps {
+
+            script {
+
+                sh "mkdir -p trivy-reports"
+
+                if (env.BUILD_FRONTEND == "true") {
+
+                    sh """
+                    trivy image \
+                    --severity HIGH,CRITICAL \
+                    --exit-code 1 \
+                    ${DOCKERHUB_USER}/cloudcart-frontend:${IMAGE_TAG}
+                    """
+                }
+
+                if (env.BUILD_USER == "true") {
+
+                    sh """
+                    trivy image \
+                    --severity HIGH,CRITICAL \
+                    --exit-code 1 \
+                    ${DOCKERHUB_USER}/cloudcart-user-service:${IMAGE_TAG}
+                    """
+                }
+
+                if (env.BUILD_PRODUCT == "true") {
+
+                    sh """
+                    trivy image \
+                    --severity HIGH,CRITICAL \
+                    --exit-code 1 \
+                    ${DOCKERHUB_USER}/cloudcart-product-service:${IMAGE_TAG}
+                    """
+                }
+
+                if (env.BUILD_ORDER == "true") {
+
+                    sh """
+                    trivy image \
+                    --severity HIGH,CRITICAL \
+                    --exit-code 1 \
+                    ${DOCKERHUB_USER}/cloudcart-order-service:${IMAGE_TAG}
+                    """
+                }
+            }
+        }
+    }
+
+post {
+    always {
+        archiveArtifacts artifacts: 'trivy-reports/*', fingerprint: true
+    }
+}
+
 post {
     always {
         cleanWs()
