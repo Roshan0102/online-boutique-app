@@ -12,7 +12,7 @@ const OrderHistory = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       if (!token) return;
-      
+
       setLoading(true);
       setError(null);
       try {
@@ -25,7 +25,7 @@ const OrderHistory = () => {
         setOrders(response.data);
       } catch (err) {
         console.error('Fetch orders error:', err);
-        setError('Failed to fetch order history. Order Service might be offline.');
+        setError('Failed to fetch orders history. Order Service might be offline.');
       } finally {
         setLoading(false);
       }
@@ -99,7 +99,7 @@ const OrderHistory = () => {
               </div>
 
               <div className="order-group-footer">
-                Total Paid: 
+                Total Paid:
                 <span className="order-total-price">${parseFloat(order.total_price).toFixed(2)}</span>
               </div>
             </div>
