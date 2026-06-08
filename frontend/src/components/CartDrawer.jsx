@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../AppContext';
 
 const CartDrawer = () => {
-  const { 
-    cart, 
-    isCartOpen, 
-    setIsCartOpen, 
-    updateCartQuantity, 
-    removeFromCart, 
-    getCartTotal, 
+  const {
+    cart,
+    isCartOpen,
+    setIsCartOpen,
+    updateCartQuantity,
+    removeFromCart,
+    getCartTotal,
     checkout,
     token
   } = useContext(AppContext);
@@ -26,7 +26,7 @@ const CartDrawer = () => {
     setSuccess(false);
 
     if (!token) {
-      setError('Please login to place an order.');
+      setError('Please login to place an orders.');
       setTimeout(() => {
         setIsCartOpen(false);
         navigate('/login');
@@ -39,7 +39,7 @@ const CartDrawer = () => {
       const result = await checkout();
       setSuccess(true);
       console.log('Checkout completed:', result);
-      
+
       // Auto redirect to orders page after success
       setTimeout(() => {
         setSuccess(false);
@@ -76,24 +76,24 @@ const CartDrawer = () => {
           ) : (
             cart.map((item) => (
               <div key={item.product.id} className="cart-item">
-                <img 
-                  src={item.product.image_url || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=100&auto=format&fit=crop&q=80'} 
-                  alt={item.product.name} 
+                <img
+                  src={item.product.image_url || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=100&auto=format&fit=crop&q=80'}
+                  alt={item.product.name}
                   className="cart-item-img"
                 />
-                
+
                 <div className="cart-item-details">
                   <h4>{item.product.name}</h4>
                   <p>${parseFloat(item.product.price).toFixed(2)} each</p>
                   <div className="cart-item-qty">
-                    <button 
+                    <button
                       onClick={() => updateCartQuantity(item.product.id, item.quantity - 1)}
                       className="cart-item-qty-btn"
                     >
                       -
                     </button>
                     <span style={{ fontWeight: '600', fontSize: '0.9rem' }}>{item.quantity}</span>
-                    <button 
+                    <button
                       onClick={() => updateCartQuantity(item.product.id, item.quantity + 1)}
                       className="cart-item-qty-btn"
                     >
@@ -106,7 +106,7 @@ const CartDrawer = () => {
                   <span style={{ fontWeight: '700', fontSize: '0.95rem' }}>
                     ${(parseFloat(item.product.price) * item.quantity).toFixed(2)}
                   </span>
-                  <button 
+                  <button
                     onClick={() => removeFromCart(item.product.id)}
                     className="cart-item-remove"
                   >
@@ -124,10 +124,10 @@ const CartDrawer = () => {
               <span>Total:</span>
               <span>${getCartTotal().toFixed(2)}</span>
             </div>
-            
-            <button 
-              onClick={handleCheckout} 
-              className="btn btn-primary" 
+
+            <button
+              onClick={handleCheckout}
+              className="btn btn-primary"
               style={{ width: '100%', padding: '14px' }}
               disabled={loading || success}
             >
