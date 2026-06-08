@@ -242,6 +242,115 @@ stages {
     }
 }
 
+stage('Push Frontend') {
+
+    when {
+        expression { env.BUILD_FRONTEND == "true" }
+    }
+
+    steps {
+
+        withCredentials([usernamePassword(
+            credentialsId: 'dockerhub-creds',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
+        )]) {
+
+            sh """
+            echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
+
+            docker push ${DOCKERHUB_USER}/cloudcart-frontend:${IMAGE_TAG}
+
+            docker tag ${DOCKERHUB_USER}/cloudcart-frontend:${IMAGE_TAG} \
+                       ${DOCKERHUB_USER}/cloudcart-frontend:latest
+
+            docker push ${DOCKERHUB_USER}/cloudcart-frontend:latest
+            """
+        }
+    }
+}
+
+    stage('Push User Service') {
+        when {
+            expression { env.BUILD_USER == "true" }
+        }
+        steps {
+            withCredentials([usernamePassword(
+                credentialsId: 'dockerhub-creds',
+                usernameVariable: 'DOCKER_USER',
+                passwordVariable: 'DOCKER_PASS'
+            )]) {
+
+                sh """
+                echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
+
+                docker push ${DOCKERHUB_USER}/cloudcart-user-service:${IMAGE_TAG}
+
+                docker tag ${DOCKERHUB_USER}/cloudcart-user-service:${IMAGE_TAG} \
+                        ${DOCKERHUB_USER}/cloudcart-user-service:latest
+
+                docker push ${DOCKERHUB_USER}/cloudcart-user-service:latest
+                """
+            }
+        }
+    }
+
+stage('Push Product Service') {
+
+    when {
+        expression { env.BUILD_PRODUCT == "true" }
+    }
+
+    steps {
+
+        withCredentials([usernamePassword(
+            credentialsId: 'dockerhub-creds',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
+        )]) {
+
+            sh """
+            echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
+
+            docker push ${DOCKERHUB_USER}/cloudcart-product-service:${IMAGE_TAG}
+
+            docker tag ${DOCKERHUB_USER}/cloudcart-product-service:${IMAGE_TAG} \
+                       ${DOCKERHUB_USER}/cloudcart-product-service:latest
+
+            docker push ${DOCKERHUB_USER}/cloudcart-product-service:latest
+            """
+        }
+    }
+}
+
+stage('Push Order Service') {
+
+    when {
+        expression { env.BUILD_ORDER == "true" }
+    }
+
+    steps {
+
+        withCredentials([usernamePassword(
+            credentialsId: 'dockerhub-creds',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
+        )]) {
+
+            sh """
+            echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
+
+            docker push ${DOCKERHUB_USER}/cloudcart-order-service:${IMAGE_TAG}
+
+            docker tag ${DOCKERHUB_USER}/cloudcart-order-service:${IMAGE_TAG} \
+                       ${DOCKERHUB_USER}/cloudcart-order-service:latest
+
+            docker push ${DOCKERHUB_USER}/cloudcart-order-service:latest
+            """
+        }
+    }
+}
+
 post {
     always {
         archiveArtifacts artifacts: 'trivy-reports/*', fingerprint: true

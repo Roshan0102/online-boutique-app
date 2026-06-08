@@ -23,7 +23,7 @@ const ProductDetails = () => {
         console.error('Fetch product details error:', err);
         setError(err.response?.status === 404
           ? 'Product not found.'
-          : 'Could not fetch product detail. Products Service might be offline.');
+          : 'Could not fetch products detail. Products Service might be offline.');
       } finally {
         setLoading(false);
       }
