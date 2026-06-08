@@ -186,8 +186,6 @@ stages {
             """
         }
     }
-}
-
     stage('Trivy Scan') {
 
         steps {
@@ -238,15 +236,11 @@ stages {
             }
         }
     }
-
-post {
-    always {
-        archiveArtifacts artifacts: 'trivy-reports/*', fingerprint: true
-    }
 }
 
 post {
     always {
+        archiveArtifacts artifacts: 'trivy-reports/*', fingerprint: true
         cleanWs()
     }
 }
