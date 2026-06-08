@@ -349,7 +349,6 @@ stage('Push Order Service') {
         }
     }
 }
-}
 
 stage('Update GitOps Repo') {
 
@@ -419,6 +418,7 @@ stage('Update GitOps Repo') {
             }
         }
     }
+}
 }
 
 post {
