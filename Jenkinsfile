@@ -1,5 +1,5 @@
 pipeline {
-    
+
 agent any
 
 environment {
@@ -60,6 +60,58 @@ stages {
                 echo "BUILD_USER=${env.BUILD_USER}"
                 echo "BUILD_PRODUCT=${env.BUILD_PRODUCT}"
                 echo "BUILD_ORDER=${env.BUILD_ORDER}"
+            }
+        }
+    }
+
+    stage('SonarQube Analysis') {
+        steps {
+            script {
+
+                def scannerHome = tool 'sonar-scanner'
+
+                withSonarQubeEnv('SonarQube') {
+
+                    if (env.BUILD_FRONTEND == "true") {
+
+                        sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=cloudcart-frontend \
+                        -Dsonar.projectName=cloudcart-frontend \
+                        -Dsonar.sources=frontend/src
+                        """
+                    }
+
+                    if (env.BUILD_USER == "true") {
+
+                        sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=cloudcart-user-service \
+                        -Dsonar.projectName=cloudcart-user-service \
+                        -Dsonar.sources=services/user-service/src
+                        """
+                    }
+
+                    if (env.BUILD_PRODUCT == "true") {
+
+                        sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=cloudcart-product-service \
+                        -Dsonar.projectName=cloudcart-product-service \
+                        -Dsonar.sources=services/product-service/src
+                        """
+                    }
+
+                    if (env.BUILD_ORDER == "true") {
+
+                        sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=cloudcart-order-service \
+                        -Dsonar.projectName=cloudcart-order-service \
+                        -Dsonar.sources=services/order-service/src
+                        """
+                    }
+                }
             }
         }
     }
