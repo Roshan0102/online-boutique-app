@@ -361,7 +361,7 @@ stage('Update GitOps Repo') {
             }
 
             withCredentials([usernamePassword(
-                credentialsId: 'github-creds',
+                credentialsId: 'github-token',
                 usernameVariable: 'GITHUB_USER',
                 passwordVariable: 'GITHUB_TOKEN'
             )]) {
