@@ -34,7 +34,7 @@ app.get('/health', async (req, res) => {
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Healthcheck Database Error in Orderss Service:', error.message);
+    console.error('Healthcheck Database Error in Orders Service:', error.message);
     return res.status(500).json({
       status: 'DOWN',
       service: 'order-service',
@@ -48,7 +48,7 @@ app.get('/health', async (req, res) => {
 // Global error handler
 app.use((err, req, res, next) => {
   console.error('[Order Service Error]:', err.stack);
-  res.status(500).json({ error: 'Something went wrong inside Order Service!' });
+  res.status(500).json({ error: 'Something went wrong inside Orders Service!' });
 });
 
 // Start server
