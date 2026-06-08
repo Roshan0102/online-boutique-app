@@ -18,7 +18,7 @@ const ProductListing = () => {
       setLoading(true);
       setError(null);
       try {
-        const url = selectedCategory === 'All' 
+        const url = selectedCategory === 'All'
           ? `${PRODUCT_SERVICE_URL}/api/products`
           : `${PRODUCT_SERVICE_URL}/api/products?category=${selectedCategory}`;
 
@@ -26,7 +26,7 @@ const ProductListing = () => {
         setProducts(response.data);
       } catch (err) {
         console.error('Fetch products error:', err);
-        setError('Could not fetch products. Make sure the Product Service is running.');
+        setError('Could not fetch productss. Make sure the Product Service is running.');
       } finally {
         setLoading(false);
       }
@@ -85,9 +85,9 @@ const ProductListing = () => {
               {products.map((product) => (
                 <div key={product.id} className="product-card glass-panel">
                   <Link to={`/products/${product.id}`} className="product-img-wrapper">
-                    <img 
-                      src={product.image_url || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=500&auto=format&fit=crop&q=80'} 
-                      alt={product.name} 
+                    <img
+                      src={product.image_url || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=500&auto=format&fit=crop&q=80'}
+                      alt={product.name}
                       className="product-img"
                     />
                   </Link>
@@ -98,10 +98,10 @@ const ProductListing = () => {
                       <Link to={`/products/${product.id}`}>{product.name}</Link>
                     </h3>
                     <p className="product-card-desc">{product.description}</p>
-                    
+
                     <div className="product-card-footer">
                       <span className="product-card-price">${parseFloat(product.price).toFixed(2)}</span>
-                      <button 
+                      <button
                         onClick={(e) => handleAddToCart(e, product)}
                         className="btn btn-primary"
                         style={{ padding: '8px 14px', fontSize: '0.85rem' }}

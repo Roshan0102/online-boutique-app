@@ -366,15 +366,15 @@ stage('Update GitOps Repo') {
             )]) {
 
                 sh """
-                git clone https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/Roshan0102/online-boutique-gitops.git gitops
+                git clone https://Roshan0102:${GITHUB_TOKEN}@github.com/Roshan0102/online-boutique-gitops.git gitops
                 """
 
                 dir('gitops') {
 
-                    sh """
+                    sh '''
                     git config user.name "Jenkins"
                     git config user.email "jenkins@cloudcart.local"
-                    """
+                    '''
 
                     if (env.BUILD_FRONTEND == "true") {
 
