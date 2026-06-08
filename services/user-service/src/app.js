@@ -34,7 +34,7 @@ app.get('/health', async (req, res) => {
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Healthcheck Databases Error:', error.message);
+    console.error('Healthchecks Databases Error:', error.message);
     return res.status(500).json({
       status: 'DOWN',
       service: 'user-service',

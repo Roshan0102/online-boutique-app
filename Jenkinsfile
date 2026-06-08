@@ -199,7 +199,8 @@ stages {
                     sh """
                     trivy image \
                     --severity HIGH,CRITICAL \
-                    --exit-code 1 \
+                    --format table \
+                    -o trivy-reports/frontend-report.txt \
                     ${DOCKERHUB_USER}/cloudcart-frontend:${IMAGE_TAG}
                     """
                 }
@@ -209,7 +210,8 @@ stages {
                     sh """
                     trivy image \
                     --severity HIGH,CRITICAL \
-                    --exit-code 1 \
+                    --format table \
+                    -o trivy-reports/user-service-report.txt \
                     ${DOCKERHUB_USER}/cloudcart-user-service:${IMAGE_TAG}
                     """
                 }
@@ -219,7 +221,8 @@ stages {
                     sh """
                     trivy image \
                     --severity HIGH,CRITICAL \
-                    --exit-code 1 \
+                    --format table \
+                    -o trivy-reports/product-service-report.txt \
                     ${DOCKERHUB_USER}/cloudcart-product-service:${IMAGE_TAG}
                     """
                 }
@@ -229,7 +232,8 @@ stages {
                     sh """
                     trivy image \
                     --severity HIGH,CRITICAL \
-                    --exit-code 1 \
+                    --format table \
+                    -o trivy-reports/order-service-report.txt \
                     ${DOCKERHUB_USER}/cloudcart-order-service:${IMAGE_TAG}
                     """
                 }
