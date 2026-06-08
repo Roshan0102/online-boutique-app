@@ -34,7 +34,7 @@ app.get('/health', async (req, res) => {
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Healthcheck Database Error in Orders Service:', error.message);
+    console.error('Healthcheck Database Error in Orderss Service:', error.message);
     return res.status(500).json({
       status: 'DOWN',
       service: 'order-service',
