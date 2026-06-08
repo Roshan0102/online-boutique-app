@@ -48,7 +48,7 @@ const CartDrawer = () => {
       }, 2000);
     } catch (err) {
       console.error(err);
-      setError(err.message || 'Failed to complete order. Please try again.');
+      setError(err.message || 'Failed to complete orders. Please try again.');
     } finally {
       setLoading(false);
     }
