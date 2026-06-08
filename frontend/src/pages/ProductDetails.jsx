@@ -21,9 +21,9 @@ const ProductDetails = () => {
         setProduct(response.data);
       } catch (err) {
         console.error('Fetch product details error:', err);
-        setError(err.response?.status === 404 
-          ? 'Product not found.' 
-          : 'Could not fetch product details. Product Service might be offline.');
+        setError(err.response?.status === 404
+          ? 'Product not found.'
+          : 'Could not fetch product detail. Products Service might be offline.');
       } finally {
         setLoading(false);
       }
@@ -75,9 +75,9 @@ const ProductDetails = () => {
       {product && (
         <div className="details-container">
           <div className="details-image-panel glass-panel">
-            <img 
-              src={product.image_url || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=500&auto=format&fit=crop&q=80'} 
-              alt={product.name} 
+            <img
+              src={product.image_url || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=500&auto=format&fit=crop&q=80'}
+              alt={product.name}
               className="details-img"
             />
           </div>
@@ -87,7 +87,7 @@ const ProductDetails = () => {
             <h1 className="details-title">{product.name}</h1>
             <div className="details-price">${parseFloat(product.price).toFixed(2)}</div>
             <p className="details-desc">{product.description}</p>
-            
+
             <div className="quantity-selector">
               <span style={{ color: '#94a3b8', fontWeight: '500' }}>Quantity:</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -97,7 +97,7 @@ const ProductDetails = () => {
               </div>
             </div>
 
-            <button 
+            <button
               onClick={handleAddToCart}
               className="btn btn-primary"
               style={{ width: '100%', maxWidth: '280px', padding: '14px 20px', fontSize: '1.05rem' }}
