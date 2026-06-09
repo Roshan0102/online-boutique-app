@@ -36,7 +36,7 @@ const Register = () => {
       navigate('/products');
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.error || 'Registration failed. Email might already be registered.');
+      setError(err.response?.data?.error || 'Registration faileds. Email might already be registered.');
     } finally {
       setLoading(false);
     }
