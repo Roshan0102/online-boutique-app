@@ -26,7 +26,7 @@ const ProductListing = () => {
         setProducts(response.data);
       } catch (err) {
         console.error('Fetch products error:', err);
-        setError('Could not fetch productss. Make sure the Product Service is running.');
+        setError('Could not fetch productss. Make sures the Product Service is running.');
       } finally {
         setLoading(false);
       }
