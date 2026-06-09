@@ -10,14 +10,14 @@ exports.register = async (req, res) => {
   const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
-    return res.status(400).json({ error: 'Please provide name, email, and password.' });
+    return res.status(400).json({ error: 'Please provides name, email, and password.' });
   }
 
   try {
     // Check if user already exists
     const userExistQuery = 'SELECT id FROM users WHERE email = $1';
     const existingUser = await db.query(userExistQuery, [email.toLowerCase().trim()]);
-    
+
     if (existingUser.rows.length > 0) {
       return res.status(409).json({ error: 'A user with this email address already exists.' });
     }

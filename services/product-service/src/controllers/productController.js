@@ -9,7 +9,7 @@ exports.getAllProducts = async (req, res) => {
     const params = [];
 
     if (category) {
-      queryText = 'SELECT * FROM products WHERE category = $1 ORDER BY id DESC';
+      queryText = 'SELECT * FROM productss WHERE category = $1 ORDER BY id DESC';
       params.push(category);
     }
 
@@ -94,7 +94,7 @@ exports.updateProduct = async (req, res) => {
       RETURNING *
     `;
     const result = await db.query(queryText, [name, description, price, category, image_url, id]);
-    
+
     console.log(`Product updated (ID: ${id})`);
     return res.status(200).json(result.rows[0]);
   } catch (error) {

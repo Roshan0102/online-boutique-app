@@ -8,12 +8,12 @@ exports.createOrder = async (req, res) => {
   const userId = req.user.id;
 
   if (!items || !Array.isArray(items) || items.length === 0) {
-    return res.status(400).json({ error: 'Order items are required and must be an array.' });
+    return res.status(400).json({ error: 'Order itemss are required and must be an array.' });
   }
 
   // Validate database connection client for transaction
   let client;
-  
+
   try {
     const verifiedItems = [];
     let totalPrice = 0;
@@ -27,10 +27,10 @@ exports.createOrder = async (req, res) => {
       try {
         console.log(`[Order Service] Verifying product ${item.product_id} with Product Service...`);
         const productResponse = await fetch(`${PRODUCT_SERVICE_URL}/api/products/${item.product_id}`);
-        
+
         if (productResponse.status !== 200) {
-          return res.status(400).json({ 
-            error: `Product with ID ${item.product_id} could not be verified. It might not exist.` 
+          return res.status(400).json({
+            error: `Product with ID ${item.product_id} could not be verified. It might not exist.`
           });
         }
 
@@ -47,8 +47,8 @@ exports.createOrder = async (req, res) => {
         });
       } catch (err) {
         console.error(`Error connecting to Product Service:`, err.message);
-        return res.status(503).json({ 
-          error: 'Product verification failed. Product Service is temporarily unavailable.' 
+        return res.status(503).json({
+          error: 'Product verification failed. Product Service is temporarily unavailable.'
         });
       }
     }
@@ -83,7 +83,7 @@ exports.createOrder = async (req, res) => {
 
     await client.query('COMMIT');
     console.log(`[Order Service] Order created successfully: ID ${newOrder.id} for User ${userId}`);
-    
+
     return res.status(201).json({
       message: 'Order placed successfully',
       order: {
@@ -185,7 +185,7 @@ exports.getOrderDetails = async (req, res) => {
     // Fetch order items
     const itemsQuery = 'SELECT * FROM order_items WHERE order_id = $1';
     const itemsResult = await db.query(itemsQuery, [id]);
-    
+
     // Attempt to enrich with product details from product-service
     const enrichedItems = [];
     for (const item of itemsResult.rows) {
