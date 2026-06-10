@@ -22,21 +22,30 @@ app.use((req, res, next) => {
 // API Routes
 app.use('/api/users', userRoutes);
 
-// Service Health Check (crucial for Docker/Kubernetes)
-app.get('/health', async (req, res) => {
+// Service Liveness Health Check (checks if server is running)
+app.get('/health', (req, res) => {
+  return res.status(200).json({
+    status: 'UP',
+    service: 'user-service',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Service Readiness Check (checks external dependencies like database)
+app.get('/ready', async (req, res) => {
   try {
     // Check DB connection
     await db.query('SELECT 1');
     return res.status(200).json({
-      status: 'UP',
+      status: 'READY',
       service: 'user-service',
       database: 'connected',
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Healthchecks Databases Error:', error.message);
+    console.error('Readiness Database Error in User Service:', error.message);
     return res.status(500).json({
-      status: 'DOWN',
+      status: 'NOT_READY',
       service: 'user-service',
       database: 'disconnected',
       error: error.message,

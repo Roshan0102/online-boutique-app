@@ -43,4 +43,4 @@ EXPOSE 3000
 # Health check tests Nginx server availability.
 # wget --spider tests url retrieval without downloading the file, preinstalled on alpine.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/ || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/health || exit 1

@@ -22,21 +22,30 @@ app.use((req, res, next) => {
 // API Routes
 app.use('/api/products', productRoutes);
 
-// Service Health Check
-app.get('/health', async (req, res) => {
+// Service Liveness Health Check (checks if server is running)
+app.get('/health', (req, res) => {
+  return res.status(200).json({
+    status: 'UP',
+    service: 'product-service',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Service Readiness Check (checks external dependencies like database)
+app.get('/ready', async (req, res) => {
   try {
     // Check DB connection
     await db.query('SELECT 1');
     return res.status(200).json({
-      status: 'UP',
+      status: 'READY',
       service: 'product-service',
       database: 'connected',
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Healthcheck Database Error:', error.message);
+    console.error('Readiness Database Error in Product Service:', error.message);
     return res.status(500).json({
-      status: 'DOWN',
+      status: 'NOT_READY',
       service: 'product-service',
       database: 'disconnected',
       error: error.message,
