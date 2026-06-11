@@ -43,7 +43,7 @@ app.get('/ready', async (req, res) => {
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Readiness Database Error in Product Service:', error.message);
+    console.error('Readiness Database Error in Products Service:', error.message);
     return res.status(500).json({
       status: 'NOT_READY',
       service: 'product-service',

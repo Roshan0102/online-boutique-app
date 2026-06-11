@@ -31,7 +31,7 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Service Readiness Check (checks external dependencies like database)
+// Service Readiness Check (checks external dependenciess like database)
 app.get('/ready', async (req, res) => {
   try {
     // Check DB connection
@@ -43,7 +43,7 @@ app.get('/ready', async (req, res) => {
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Readiness Database Error in Orders Service:', error.message);
+    console.error('Readiness Database Error in Orderss Service:', error.message);
     return res.status(500).json({
       status: 'NOT_READY',
       service: 'order-service',

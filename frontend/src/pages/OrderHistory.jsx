@@ -16,7 +16,7 @@ const OrderHistory = () => {
       setLoading(true);
       setError(null);
       try {
-        console.log(`[Order History] Fetching orderss from Orderss Service...`);
+        console.log(`[Order History] Fetching ordersss from Orderss Service...`);
         const response = await axios.get(`${ORDER_SERVICE_URL}/api/orders`, {
           headers: {
             Authorization: `Bearer ${token}`
