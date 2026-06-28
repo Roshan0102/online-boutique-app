@@ -175,3 +175,12 @@ This repository structure has been carefully prepared for advanced DevOps practi
   2. Implement Kubernetes `ClusterIP` services to map internal DNS (e.g. `http://product-service:5002`).
   3. Create an Ingress Controller (like Nginx Ingress or AWS ALB Controller) to route `/api/users/*`, `/api/products/*`, and `/api/orders/*` to their corresponding pods, solving CORS requirements in cloud environments.
   4. Convert variables to Kubernetes ConfigMaps and Secrets.
+ 
+## 🔗 Related Repositories
+
+This GitOps repository works hand-in-hand with our infrastructure repository to deliver a fully automated end-to-end cloud platform:
+
+*   🚀 **Gitops Repo:** https://github.com/Roshan0102/online-boutique-gitops/
+*   🏗️ **Infrastructure Repo:** [Roshan0102/eks-platform-infra](https://github.com/Roshan0102/eks-platform-infra)
+
+## 🛠️ How it Works
